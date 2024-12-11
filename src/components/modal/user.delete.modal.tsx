@@ -1,13 +1,24 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { useAppDispatch, useAppSelector } from '../../redux/hook';
+import { deleteUser, resetDeleteUser } from '../../redux/user/user.slide';
+import { useEffect } from 'react';
 
 const UserDeleteModal = (props: any) => {
+
     const { dataUser, isOpenDeleteModal, setIsOpenDeleteModal } = props;
-
+    const dispatch = useAppDispatch();
     const handleSubmit = () => {
-        console.log(">>> check delete: ", { id: dataUser?.id ?? "" })
+        dispatch(deleteUser({id :dataUser?.id}));      
     }
-
+    const isDeleteSuccess = useAppSelector(state => state.user.isDeleteSuccess)
+    useEffect(()=>{
+        if(isDeleteSuccess)
+        {
+            setIsOpenDeleteModal(false)
+            dispatch(resetDeleteUser())
+        }
+    },[isDeleteSuccess])
     return (
         <Modal
             show={isOpenDeleteModal}
